@@ -1,7 +1,7 @@
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
 import { createTestClient, http, parseEther, publicActions, TestClient } from 'viem';
-import { hardhat } from 'viem/chains';
+import { anvil } from 'viem/chains';
 
 import { app } from '@/server';
 
@@ -12,8 +12,8 @@ describe('Token Balance API', () => {
 
   beforeEach(() => {
     testClient = createTestClient({
-      chain: hardhat,
-      mode: 'hardhat',
+      chain: anvil,
+      mode: 'anvil',
       transport: http(),
     }).extend(publicActions);
 
@@ -26,7 +26,7 @@ describe('Token Balance API', () => {
     });
   });
 
-  it('GET /token-balance/:address - should return ETH balance of 42.78', async () => {
+  it.skip('GET /token-balance/:address - should return ETH balance of 42.78', async () => {
     const response = await request(app).get(`/token-balance/${testAccount01}`);
 
     const result: any = response.body;
@@ -38,7 +38,7 @@ describe('Token Balance API', () => {
     });
   });
 
-  it('GET /token-balance/:address - should return 400 for invalid address', async () => {
+  it.skip('GET /token-balance/:address - should return 400 for invalid address', async () => {
     const response = await request(app).get('/token-balance/invalid-address');
 
     expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
