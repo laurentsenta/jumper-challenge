@@ -131,4 +131,65 @@ describe('Account Authentication API', () => {
     expect(response.body.success).toBeFalsy();
     expect(response.body.message).toContain('Invalid Ethereum address');
   });
+
+  describe('GET /account/:address', () => {
+    let authToken: string;
+
+    beforeEach(async () => {
+      // First authenticate to get a token
+      const rawAccount = testAccounts.account01;
+      const account = privateKeyToAccount(rawAccount.privateKey);
+
+      const signature = await client.signMessage({
+        account,
+        message: rawAccount.nonce,
+      });
+
+      const authResponse = await request(app).post('/account/').send({
+        address: account.address,
+        signature,
+      });
+
+      authToken = authResponse.body.responseObject.token;
+    });
+
+    it('should return account information for authenticated user', async () => {
+      const response = await request(app)
+        .get(`/account/${testAccounts.account01.address}`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.statusCode).toEqual(StatusCodes.OK);
+      expect(response.body.success).toBeTruthy();
+      expect(response.body.responseObject).toEqual({
+        address: testAccounts.account01.address,
+        lastSignIn: expect.any(Number),
+      });
+    });
+
+    it('should return 401 when no token is provided', async () => {
+      const response = await request(app).get(`/account/${testAccounts.account01.address}`);
+
+      expect(response.statusCode).toEqual(StatusCodes.UNAUTHORIZED);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.message).toContain('No token provided');
+    });
+
+    it('should return 403 when accessing another account', async () => {
+      const response = await request(app)
+        .get(`/account/${testAccounts.account02.address}`)
+        .set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.statusCode).toEqual(StatusCodes.FORBIDDEN);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.message).toContain('Not authorized to access this account');
+    });
+
+    it('should return 400 for invalid address format', async () => {
+      const response = await request(app).get('/account/invalid-address').set('Authorization', `Bearer ${authToken}`);
+
+      expect(response.statusCode).toEqual(StatusCodes.BAD_REQUEST);
+      expect(response.body.success).toBeFalsy();
+      expect(response.body.message).toContain('Invalid Ethereum address');
+    });
+  });
 });

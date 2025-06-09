@@ -8,6 +8,7 @@ import { z } from 'zod';
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { AccountAuthRequestSchema } from '@/common/models/accountAuthRequest';
 import { AccountAuthResponse, AccountAuthSchema } from '@/common/models/accountAuthResponse';
+import { AccountInfoResponse, AccountInfoSchema } from '@/common/models/accountInfoResponse';
 import { AccountNonceResponse, AccountNonceSchema } from '@/common/models/accountNonceResponse';
 import { ResponseStatus } from '@/common/models/serviceResponse';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
@@ -43,6 +44,19 @@ export const accountRouter: Router = (() => {
       },
     },
     responses: createApiResponse(AccountAuthSchema, 'Account authenticated successfully'),
+  });
+
+  accountRegistry.registerPath({
+    method: 'get',
+    path: '/account/{address}',
+    tags: ['Account'],
+    security: [{ bearerAuth: [] }],
+    request: {
+      params: z.object({
+        address: z.string().describe('Ethereum address'),
+      }),
+    },
+    responses: createApiResponse(AccountInfoSchema, 'Account information retrieved successfully'),
   });
 
   router.get('/nonce/:address', async (req: Request, res: Response) => {
@@ -144,6 +158,67 @@ export const accountRouter: Router = (() => {
         ResponseStatus.Failed,
         'Failed to authenticate account',
         { token: '', expiresAt: 0 },
+        StatusCodes.INTERNAL_SERVER_ERROR
+      );
+      handleServiceResponse(serviceResponse, res);
+    }
+  });
+
+  router.get('/:address', async (req: Request, res: Response) => {
+    const { address } = req.params;
+    const authToken = req.headers.authorization?.split(' ')[1];
+
+    if (!authToken) {
+      const serviceResponse = new AccountInfoResponse(
+        ResponseStatus.Failed,
+        'No token provided',
+        { address: '', lastSignIn: 0 },
+        StatusCodes.UNAUTHORIZED
+      );
+      return handleServiceResponse(serviceResponse, res);
+    }
+
+    if (!isAddress(address)) {
+      const serviceResponse = new AccountInfoResponse(
+        ResponseStatus.Failed,
+        'Invalid Ethereum address',
+        { address: '', lastSignIn: 0 },
+        StatusCodes.BAD_REQUEST
+      );
+      return handleServiceResponse(serviceResponse, res);
+    }
+
+    try {
+      // Verify the token belongs to the requested address
+      const account = await res.locals.accountService.getAccount(address);
+      if (!account || account.token !== authToken) {
+        const serviceResponse = new AccountInfoResponse(
+          ResponseStatus.Failed,
+          'Not authorized to access this account',
+          { address: '', lastSignIn: 0 },
+          StatusCodes.FORBIDDEN
+        );
+        return handleServiceResponse(serviceResponse, res);
+      }
+
+      const serviceResponse = new AccountInfoResponse(
+        ResponseStatus.Success,
+        'Account information retrieved successfully',
+        {
+          address: account.address,
+          lastSignIn: account.lastSignIn,
+        },
+        StatusCodes.OK
+      );
+
+      handleServiceResponse(serviceResponse, res);
+    } catch (error) {
+      console.error('Error retrieving account information:', error);
+
+      const serviceResponse = new AccountInfoResponse(
+        ResponseStatus.Failed,
+        'Failed to retrieve account information',
+        { address: '', lastSignIn: 0 },
         StatusCodes.INTERNAL_SERVER_ERROR
       );
       handleServiceResponse(serviceResponse, res);

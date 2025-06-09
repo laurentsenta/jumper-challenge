@@ -10,3 +10,4 @@
 - API Structure should use versioning (/v1/...)
 - Tooling to avoid code duplication, define types and
   routes in a single place should be used.
+- CSRF protection.
