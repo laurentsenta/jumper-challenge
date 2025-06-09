@@ -1,0 +1,93 @@
+## Backend Architecture Overview
+
+### __Technology Stack__
+
+- __Framework__: Express.js with TypeScript
+- __Runtime__: Node.js
+- __Build Tools__: TSup for bundling, Vitest for testing
+- __Documentation__: OpenAPI/Swagger with automatic generation
+- __Validation__: Zod for schema validation
+- __Logging__: Pino logger
+- __Security__: Helmet for security headers, CORS, rate limiting
+
+### __Project Structure__
+
+```javascript
+backend/
+├── src/
+│   ├── index.ts              # Application entry point
+│   ├── server.ts             # Express server configuration
+│   ├── api/                  # API endpoints
+│   │   └── healthCheck/      # Health check endpoint
+│   ├── api-docs/             # OpenAPI/Swagger documentation
+│   ├── common/               # Shared utilities and middleware
+│   │   ├── middleware/       # Express middleware
+│   │   ├── models/           # Data models
+│   │   └── utils/            # Utility functions
+```
+
+### __Key Architectural Patterns__
+
+1. __Modular Router Pattern__: Each API endpoint has its own router module (e.g., `healthCheckRouter`)
+
+2. __Service Response Pattern__: Standardized response format using `ServiceResponse` class with:
+
+   - Success/failure status
+   - Message
+   - Response data
+   - HTTP status code
+
+3. __OpenAPI Integration__: Each router registers its endpoints with OpenAPI for automatic documentation generation
+
+4. __Environment Configuration__: Centralized environment variable management using `envalid` for type-safe validation
+
+5. __Middleware Stack__:
+
+   - CORS configuration
+   - Helmet security headers
+   - Rate limiting
+   - Request logging
+   - Error handling
+
+### __Code Organization Details__
+
+__Entry Points:__
+
+- `index.ts`: Starts the server, handles graceful shutdown
+- `server.ts`: Configures Express app with middleware and routes
+
+__API Layer:__
+
+- Routes are organized by feature (currently only health-check)
+- Each router exports both the Express router and OpenAPI registry
+- Uses Zod schemas for request/response validation
+
+__Common Layer:__
+
+- __Middleware__: Error handling, rate limiting, request logging
+- __Models__: `ServiceResponse` for standardized API responses
+- __Utils__: Environment config, HTTP handlers, validation helpers
+
+__Documentation:__
+
+- Auto-generated Swagger UI available at root path
+- OpenAPI JSON spec available at `/swagger.json`
+- Uses zod-to-openapi for schema generation
+
+### __Development Workflow__
+
+- __Development__: `npm run dev` (with hot reload via tsx watch)
+- __Testing__: Vitest with coverage support
+- __Linting__: ESLint with TypeScript support
+- __Formatting__: Prettier with lint-staged for pre-commit hooks
+- __Building__: TSup for fast TypeScript bundling
+
+### __Configuration__
+
+- TypeScript path aliases: `@/*` maps to `src/*`
+- Environment variables validated at startup
+- Configurable rate limiting and CORS origins
+
+This is a well-structured Express/TypeScript backend following modern best practices with strong typing, automated documentation, and proper separation of concerns. The architecture is scalable and ready for adding more API endpoints following the established patterns.
+
+Would you like me to dive deeper into any specific aspect of the backend architecture?
