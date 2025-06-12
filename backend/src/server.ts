@@ -1,4 +1,3 @@
-import cors from 'cors';
 import express, { Express } from 'express';
 import helmet from 'helmet';
 import { pino } from 'pino';
@@ -9,11 +8,12 @@ import errorHandler from '@/common/middleware/errorHandler';
 import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import viemClient from '@/common/middleware/viemClient';
-import { env } from '@/common/utils/envConfig';
 
 import { accountRouter } from './api/account/accountRouter';
 import { tokenBalanceRouter } from './api/tokenBalance/tokenBalanceRouter';
 import accountService from './common/middleware/accountService';
+import authMiddleware from './common/middleware/auth';
+import corsMiddleware from './common/middleware/cors';
 import nonceService from './common/middleware/nonceService';
 
 const logger = pino({ name: 'server start' });
@@ -23,13 +23,14 @@ const app: Express = express();
 app.set('trust proxy', true);
 
 // Middlewares
-app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
+app.use(corsMiddleware);
 app.use(helmet());
 app.use(rateLimiter);
 app.use(express.json());
 
 app.use(requestLogger);
 app.use(viemClient);
+app.use(authMiddleware);
 app.use(nonceService(app));
 app.use(accountService(app));
 

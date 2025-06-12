@@ -1,7 +1,7 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
 import express, { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
-import { formatEther, isAddress, PublicClient } from 'viem';
+import { isAddress } from 'viem';
 import { z } from 'zod';
 
 import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
@@ -40,20 +40,26 @@ export const tokenBalanceRouter: Router = (() => {
       return handleServiceResponse(serviceResponse, res);
     }
 
+    // Allow other backend and auth'd users
+    let isAllowed = res.locals.isBackend;
+    if (!isAllowed && res.locals.iron?.siwe?.address.toLowerCase() === address.toLowerCase()) {
+      isAllowed = true;
+    }
+
+    if (!isAllowed) {
+      const serviceResponse = new TokenBalanceResponse(
+        ResponseStatus.Failed,
+        'Unauthorized',
+        {},
+        StatusCodes.UNAUTHORIZED
+      );
+      return handleServiceResponse(serviceResponse, res);
+    }
+
     try {
-      const viemClient: PublicClient = req.app.locals.viem;
-
-      if (!viemClient) {
-        throw new Error('Viem client not initialized');
-      }
-
-      // Fetch ETH balance
-      const ethBalance = await viemClient.getBalance({ address });
-      const formattedEthBalance = formatEther(ethBalance);
-
       // TODO: Fetch ERC20 token balances
       const responseData: TokenBalance = {
-        eth: formattedEthBalance,
+        eth: '42780000000000000000',
       };
 
       const serviceResponse = new TokenBalanceResponse(
