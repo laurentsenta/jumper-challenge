@@ -10,6 +10,7 @@ import {
   Container,
 } from '@mui/material';
 import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 const Navbar: React.FC = () => {
   return (
@@ -47,7 +48,7 @@ const Navbar: React.FC = () => {
               </Button>
             </Box>
           </Box>
-          <AccountItem />
+          <ConnectButton showBalance={false} />
         </Toolbar>
       </Container>
     </AppBar>

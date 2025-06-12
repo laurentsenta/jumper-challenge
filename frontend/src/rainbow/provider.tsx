@@ -8,7 +8,7 @@ import {
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createSiweMessage } from "viem/siwe";
 
-enum AuthStatus {
+export enum AuthStatus {
   Loading = "loading",
   Authenticated = "authenticated",
   Unauthenticated = "unauthenticated",
