@@ -12,4 +12,5 @@ export const env = cleanEnv(process.env, {
   COMMON_RATE_LIMIT_WINDOW_MS: num({ devDefault: testOnly(1000) }),
   IRON_PASSWORD: str({ devDefault: testOnly('password') }),
   IRON_DOMAIN: str({ devDefault: testOnly('.jumper.local') }),
+  ALCHEMY_API_KEY: str({ devDefault: testOnly('your-alchemy-api-key') }),
 });

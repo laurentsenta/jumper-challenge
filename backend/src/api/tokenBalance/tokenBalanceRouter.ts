@@ -1,4 +1,5 @@
 import { OpenAPIRegistry } from '@asteasolutions/zod-to-openapi';
+import { Alchemy, Network } from 'alchemy-sdk';
 import express, { Request, Response, Router } from 'express';
 import { StatusCodes } from 'http-status-codes';
 import { isAddress } from 'viem';
@@ -10,6 +11,17 @@ import { TokenBalance, TokenBalanceResponse, TokenBalanceSchema } from '@/common
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
 export const tokenBalanceRegistry = new OpenAPIRegistry();
+
+const ETH_METADATA = {
+  symbol: 'ETH',
+  decimals: 18,
+  logo: 'https://etherscan.io/images/svg/brands/ethereum-original.svg',
+  name: 'Ethereum',
+};
+
+const hasValidBalance = <T extends { balance: string | null }>(x: T): x is T & { balance: string } => {
+  return x.balance !== null && BigInt(x.balance) > BigInt(0);
+};
 
 export const tokenBalanceRouter: Router = (() => {
   const router = express.Router();
@@ -34,7 +46,7 @@ export const tokenBalanceRouter: Router = (() => {
       const serviceResponse = new TokenBalanceResponse(
         ResponseStatus.Failed,
         'Invalid Ethereum address format',
-        {},
+        [],
         StatusCodes.BAD_REQUEST
       );
       return handleServiceResponse(serviceResponse, res);
@@ -50,18 +62,68 @@ export const tokenBalanceRouter: Router = (() => {
       const serviceResponse = new TokenBalanceResponse(
         ResponseStatus.Failed,
         'Unauthorized',
-        {},
+        [],
         StatusCodes.UNAUTHORIZED
       );
       return handleServiceResponse(serviceResponse, res);
     }
 
     try {
-      // TODO: Fetch ERC20 token balances
-      const responseData: TokenBalance = {
-        eth: '42780000000000000000',
+      // get token balances using Alchemy SDK
+      const config = {
+        apiKey: process.env.ALCHEMY_API_KEY!,
+        // TODO: eventually take this as a query param.
+        // We would need a way to go from a chainId to a network.
+        network: Network.ETH_MAINNET,
       };
 
+      const alchemy = new Alchemy(config);
+      // TODO: process through pagination
+      const balancesResponse = await alchemy.core.getTokenBalances(address);
+      console.log(`The balances of ${address} address are:`, balancesResponse);
+
+      const balances = balancesResponse.tokenBalances
+        .map((token) => ({
+          contract: token.contractAddress,
+          balance: token.tokenBalance,
+        }))
+        .filter(hasValidBalance);
+
+      // get metadata
+      const balancesWithMetadata = await Promise.all(
+        balances.map(async (token) => {
+          const metadata = await alchemy.core.getTokenMetadata(token.contract);
+          return {
+            contract: token.contract,
+            balance: token.balance,
+            metadata,
+          };
+        })
+      );
+      console.log(`The metadata of ${address} address are:`, balancesWithMetadata);
+
+      // add ethereum
+      const ethBalance = await alchemy.core.getBalance(address);
+      balancesWithMetadata.push({
+        contract: '0x0',
+        balance: ethBalance.toString(),
+        metadata: ETH_METADATA,
+      });
+
+      // sort by symbol name (nulls last) then by contract address
+      balancesWithMetadata.sort((a, b) => {
+        if (a.metadata.symbol && b.metadata.symbol) {
+          return a.metadata.symbol.toLowerCase() < b.metadata.symbol.toLowerCase() ? -1 : 1;
+        }
+        return a.contract.toLowerCase() < b.contract.toLowerCase() ? -1 : 1;
+      });
+
+      // add the ethereum balance
+      console.log(`The ETH balance of ${address} address is:`, ethBalance);
+
+      const responseData: TokenBalance = balancesWithMetadata;
+
+      // TODO: with the response, return a cache ttl
       const serviceResponse = new TokenBalanceResponse(
         ResponseStatus.Success,
         'Token balances retrieved successfully',
@@ -76,7 +138,7 @@ export const tokenBalanceRouter: Router = (() => {
       const serviceResponse = new TokenBalanceResponse(
         ResponseStatus.Failed,
         'Failed to fetch token balances',
-        {},
+        [],
         StatusCodes.SERVICE_UNAVAILABLE
       );
       handleServiceResponse(serviceResponse, res);
