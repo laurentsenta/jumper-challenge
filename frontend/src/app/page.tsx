@@ -22,7 +22,7 @@ const FEATURES = [
     icon: AccountBalanceWalletIcon,
   },
   {
-    title: 'Explore NFTs',
+    title: 'Explore ERC20s',
     description: 'View your cosmic collection in our immersive dashboard',
     icon: CollectionsIcon,
   },
@@ -55,12 +55,12 @@ export default function Home() {
             <Grid item xs={12} md={4} key={index}>
               <Card>
                 <CardContent>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2 }}>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 2, textAlign: 'center' }}>
                     <feature.icon sx={{ fontSize: 40, color: 'primary.main' }} />
                     <Typography variant="h5" component="h2" gutterBottom>
                       {feature.title}
                     </Typography>
-                    <Typography variant="body1" color="text.secondary">
+                    <Typography variant="body1" color="text.secondary" align="center">
                       {feature.description}
                     </Typography>
                   </Box>
