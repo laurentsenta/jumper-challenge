@@ -40,10 +40,34 @@ const Navbar: React.FC = () => {
               </Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Button component={Link} href="/app/dashboard" color="inherit">
+              <Button 
+                component={Link} 
+                href="/app/dashboard" 
+                color="inherit"
+                sx={{
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: 2,
+                  '&:hover': {
+                    backgroundColor: 'rgba(138, 43, 226, 0.1)',
+                  }
+                }}
+              >
                 Dashboard
               </Button>
-              <Button component={Link} href="/app/leaderboard" color="inherit">
+              <Button 
+                component={Link} 
+                href="/app/leaderboard" 
+                color="inherit"
+                sx={{
+                  px: 3,
+                  py: 1.5,
+                  borderRadius: 2,
+                  '&:hover': {
+                    backgroundColor: 'rgba(138, 43, 226, 0.1)',
+                  }
+                }}
+              >
                 Leaderboard
               </Button>
             </Box>

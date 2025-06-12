@@ -1,6 +1,8 @@
 import React from 'react';
 import Navbar from '@/components/layout/Navbar';
 import { Providers } from './providers';
+import { Box, Container } from '@mui/material';
+import SpaceBackground from '@/components/SpaceBackground';
 
 export default function AppLayout({
   children,
@@ -9,10 +11,18 @@ export default function AppLayout({
 }) {
   return (
     <Providers>
-      <div className="min-h-screen bg-gray-100">
-        <Navbar />
-        <div className="container mx-auto px-4 py-8">{children}</div>
-      </div>
+      <Box sx={{ 
+        minHeight: '100vh',
+        position: 'relative',
+      }}>
+        <SpaceBackground />
+        <Box sx={{ position: 'relative', zIndex: 1 }}>
+          <Navbar />
+          <Container maxWidth="lg" sx={{ py: 8 }}>
+            {children}
+          </Container>
+        </Box>
+      </Box>
     </Providers>
   );
 } 

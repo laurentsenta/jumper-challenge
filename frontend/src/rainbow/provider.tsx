@@ -2,6 +2,7 @@
 
 import {
   createAuthenticationAdapter,
+  darkTheme,
   RainbowKitAuthenticationProvider,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
@@ -13,6 +14,11 @@ export enum AuthStatus {
   Authenticated = "authenticated",
   Unauthenticated = "unauthenticated",
 }
+
+const theme = darkTheme({
+  accentColor: "#7b3fe4",
+  accentColorForeground: "white",
+});
 
 export const RainbowKitWithAuthProvider: React.FC<{
   children: React.ReactNode;
@@ -33,7 +39,9 @@ export const RainbowKitWithAuthProvider: React.FC<{
       try {
         const response = await fetch("/api/auth/me");
         const json = await response.json();
-        setStatus(json.address ? AuthStatus.Authenticated : AuthStatus.Unauthenticated);
+        setStatus(
+          json.address ? AuthStatus.Authenticated : AuthStatus.Unauthenticated
+        );
       } catch (_error) {
         setStatus(AuthStatus.Unauthenticated);
       } finally {
@@ -45,8 +53,8 @@ export const RainbowKitWithAuthProvider: React.FC<{
     fetchStatus();
 
     // When window is focused (in case user logs out of another window)
-    window.addEventListener("focus", fetchStatus);
-    return () => window.removeEventListener("focus", fetchStatus);
+    // window.addEventListener("focus", fetchStatus);
+    // return () => window.removeEventListener("focus", fetchStatus);
   }, []);
 
   const authAdapater = useMemo(() => {
@@ -86,7 +94,7 @@ export const RainbowKitWithAuthProvider: React.FC<{
 
   return (
     <RainbowKitAuthenticationProvider adapter={authAdapater} status={status}>
-      <RainbowKitProvider>{children}</RainbowKitProvider>
+      <RainbowKitProvider theme={theme}>{children}</RainbowKitProvider>
     </RainbowKitAuthenticationProvider>
   );
 };
