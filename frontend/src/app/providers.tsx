@@ -1,10 +1,11 @@
 'use client';
 
+import { RainbowKitWithAuthProvider } from "@/rainbow/provider";
+import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
-import { getDefaultConfig, RainbowKitProvider } from "@rainbow-me/rainbowkit";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { WagmiProvider } from "wagmi";
-import { mainnet, polygon, optimism, arbitrum, base } from "wagmi/chains";
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+import { arbitrum, base, mainnet, optimism, polygon } from "wagmi/chains";
 
 const PROJECT_ID = "a0c3b75f9e0a48a167db9c7a0943a34c"; // TODO: switch to envs
 
@@ -21,7 +22,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider>{children}</RainbowKitProvider>
+        <RainbowKitWithAuthProvider>{children}</RainbowKitWithAuthProvider>
       </QueryClientProvider>
     </WagmiProvider>
   );
