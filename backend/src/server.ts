@@ -9,12 +9,10 @@ import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
 import viemClient from '@/common/middleware/viemClient';
 
-import { accountRouter } from './api/account/accountRouter';
 import { tokenBalanceRouter } from './api/tokenBalance/tokenBalanceRouter';
 import accountService from './common/middleware/accountService';
 import authMiddleware from './common/middleware/auth';
 import corsMiddleware from './common/middleware/cors';
-import nonceService from './common/middleware/nonceService';
 
 const logger = pino({ name: 'server start' });
 const app: Express = express();
@@ -31,13 +29,11 @@ app.use(express.json());
 app.use(requestLogger);
 app.use(viemClient);
 app.use(authMiddleware);
-app.use(nonceService(app));
 app.use(accountService(app));
 
 // Routes
 app.use('/health-check', healthCheckRouter);
 app.use('/token-balance', tokenBalanceRouter);
-app.use('/account', accountRouter);
 
 // Swagger UI
 app.use(openAPIRouter);
