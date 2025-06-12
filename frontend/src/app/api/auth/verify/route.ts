@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
     });
 
     if (!success) {
-      throw new Error("Invalid signature.");
+      return NextResponse.json({ message: "Invalid signature." }, { status: 422 });
     }
 
     if (siweMessage.nonce !== session.nonce) {
