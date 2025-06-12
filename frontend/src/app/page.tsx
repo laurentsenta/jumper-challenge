@@ -1,54 +1,21 @@
-import { Box, Typography, Paper } from "@mui/material";
-import { ConnectButton } from "@rainbow-me/rainbowkit";
-import SpaceBackground from "@/components/SpaceBackground";
+import React from 'react';
+import Link from 'next/link';
 
 export default function Home() {
   return (
-    <>
-      <SpaceBackground />
-      <Box
-        sx={{
-          minHeight: "100vh",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          p: 2,
-        }}
-      >
-        <Paper
-          elevation={3}
-          sx={{
-            p: 4,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            gap: 3,
-            maxWidth: "600px",
-            width: "100%",
-            bgcolor: "rgba(0, 0, 0, 0.7)",
-            backdropFilter: "blur(10px)",
-            border: "1px solid rgba(255, 255, 255, 0.1)",
-          }}
-        >
-          <Typography
-            variant="h3"
-            component="h1"
-            align="center"
-            sx={{
-              fontWeight: "bold",
-              background: "linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)",
-              backgroundClip: "text",
-              textFillColor: "transparent",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent",
-              textShadow: "0 0 20px rgba(33, 150, 243, 0.3)",
-            }}
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-b from-blue-500 to-purple-600">
+      <div className="text-center text-white space-y-8">
+        <h1 className="text-6xl font-bold">Welcome to Jumper Challenge</h1>
+        <p className="text-xl">Test your skills and compete with others!</p>
+        <div className="space-x-4">
+          <Link
+            href="/app/dashboard"
+            className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors"
           >
-            Welcome to Jumper Challenge!
-          </Typography>
-          <ConnectButton />
-        </Paper>
-      </Box>
-    </>
+            Launch App
+          </Link>
+        </div>
+      </div>
+    </div>
   );
 }
