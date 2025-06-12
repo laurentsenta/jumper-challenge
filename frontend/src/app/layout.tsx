@@ -1,6 +1,7 @@
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v14-appRouter";
 import { ThemeProvider } from "@mui/material/styles";
 import "@rainbow-me/rainbowkit/styles.css";
+import CssBaseline from "@mui/material/CssBaseline";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import theme from "../theme";
@@ -14,7 +15,7 @@ if (!APP_NAME) {
 
 export const metadata: Metadata = {
   title: APP_NAME,
-  description: "Leaderboard for your NFTs!",
+  description: "Leaderboard for your ERC20!",
 };
 
 export default function RootLayout({
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <CssBaseline />
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             {children}

@@ -1,5 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
+import { Box, Button, Typography, Stack, IconButton, Tooltip } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 const AccountItem: React.FC = () => {
   // This is a placeholder - we'll implement actual auth state later
@@ -7,20 +9,33 @@ const AccountItem: React.FC = () => {
   const user = { name: "John Doe" };
 
   return (
-    <div className="flex items-center">
+    <Box>
       {isLoggedIn ? (
-        <div className="flex items-center space-x-4">
-          <span className="text-gray-600">{user?.name || 'User'}</span>
-          <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography variant="body2" color="text.secondary">
+            {user?.name || 'User'}
+          </Typography>
+          <Button 
+            variant="contained" 
+            color="error"
+            size="small"
+          >
             Logout
-          </button>
-        </div>
+          </Button>
+        </Stack>
       ) : (
-        <Link href="/app/login" className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-          Login
-        </Link>
+        <Tooltip title="Connect Wallet">
+          <IconButton
+            component={Link}
+            href="/app/login"
+            color="primary"
+            size="large"
+          >
+            <AccountCircleIcon />
+          </IconButton>
+        </Tooltip>
       )}
-    </div>
+    </Box>
   );
 };
 

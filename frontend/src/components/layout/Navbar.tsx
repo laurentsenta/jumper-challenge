@@ -1,35 +1,56 @@
 import React from 'react';
 import Link from 'next/link';
 import AccountItem from "./AccountItem";
+import { 
+  AppBar, 
+  Toolbar, 
+  Typography, 
+  Box, 
+  Button,
+  Container,
+} from '@mui/material';
+import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
 
 const Navbar: React.FC = () => {
   return (
-    <nav className="bg-white shadow-lg">
-      <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
-            <Link href="/" className="text-xl font-bold text-gray-800">
-              Jumper Challenge
-            </Link>
-            <div className="ml-10 flex items-baseline space-x-4">
-              <Link
-                href="/app/dashboard"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2"
+    <AppBar position="static" color="default" elevation={1}>
+      <Container maxWidth="lg">
+        <Toolbar disableGutters>
+          <Box sx={{ display: "flex", alignItems: "center", flexGrow: 1 }}>
+            <Box
+              component={Link}
+              href="/app/dashboard"
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                textDecoration: "none",
+                color: "text.primary",
+                mr: 4,
+              }}
+            >
+              <RocketLaunchIcon sx={{ mr: 1, color: "primary.main" }} />
+              <Typography
+                variant="h6"
+                sx={{
+                  fontWeight: "bold",
+                }}
               >
+                SuperJumper
+              </Typography>
+            </Box>
+            <Box sx={{ display: "flex", gap: 2 }}>
+              <Button component={Link} href="/app/dashboard" color="inherit">
                 Dashboard
-              </Link>
-              <Link
-                href="/app/leaderboard"
-                className="text-gray-600 hover:text-gray-900 px-3 py-2"
-              >
+              </Button>
+              <Button component={Link} href="/app/leaderboard" color="inherit">
                 Leaderboard
-              </Link>
-            </div>
-          </div>
+              </Button>
+            </Box>
+          </Box>
           <AccountItem />
-        </div>
-      </div>
-    </nav>
+        </Toolbar>
+      </Container>
+    </AppBar>
   );
 };
 
