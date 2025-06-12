@@ -9,6 +9,7 @@ import { createApiResponse } from '@/api-docs/openAPIResponseBuilders';
 import { ResponseStatus } from '@/common/models/serviceResponse';
 import { TokenBalance, TokenBalanceResponse, TokenBalanceSchema } from '@/common/models/tokenBalanceResponse';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
+import { tokenService } from '@/data/token';
 
 import { env } from '../../common/utils/envConfig';
 
@@ -71,14 +72,14 @@ export const tokenBalanceRouter: Router = (() => {
     }
 
     try {
-      // get token balances using Alchemy SDK
+      const chainId = 1; // Always assume Ethereum mainnet for now
       const alchemy = new Alchemy({
         apiKey: env.ALCHEMY_API_KEY,
         network: Network.ETH_MAINNET,
       });
+
       // TODO: process through pagination
       const balancesResponse = await alchemy.core.getTokenBalances(address);
-      console.log(`The balances of ${address} address are:`, balancesResponse);
 
       const balances = balancesResponse.tokenBalances
         .map((token) => ({
@@ -90,7 +91,26 @@ export const tokenBalanceRouter: Router = (() => {
       // get metadata
       const balancesWithMetadata = await Promise.all(
         balances.map(async (token) => {
-          const metadata = await alchemy.core.getTokenMetadata(token.contract);
+          // Try to get metadata from cache first
+          let metadata = await tokenService.getTokenMetadata(token.contract, chainId);
+
+          if (!metadata) {
+            const metadataResponse = await alchemy.core.getTokenMetadata(token.contract);
+
+            metadata = {
+              name: metadataResponse.name,
+              symbol: metadataResponse.symbol,
+              decimals: metadataResponse.decimals,
+              logo: metadataResponse.logo,
+            };
+
+            await tokenService.setTokenMetadata({
+              ...metadata,
+              address: token.contract,
+              chainId,
+            });
+          }
+
           return {
             contract: token.contract,
             balance: token.balance,
