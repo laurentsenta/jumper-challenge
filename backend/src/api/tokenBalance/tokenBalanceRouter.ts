@@ -10,6 +10,8 @@ import { ResponseStatus } from '@/common/models/serviceResponse';
 import { TokenBalance, TokenBalanceResponse, TokenBalanceSchema } from '@/common/models/tokenBalanceResponse';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 
+import { env } from '../../common/utils/envConfig';
+
 export const tokenBalanceRegistry = new OpenAPIRegistry();
 
 const ETH_METADATA = {
@@ -70,14 +72,10 @@ export const tokenBalanceRouter: Router = (() => {
 
     try {
       // get token balances using Alchemy SDK
-      const config = {
-        apiKey: process.env.ALCHEMY_API_KEY!,
-        // TODO: eventually take this as a query param.
-        // We would need a way to go from a chainId to a network.
+      const alchemy = new Alchemy({
+        apiKey: env.ALCHEMY_API_KEY,
         network: Network.ETH_MAINNET,
-      };
-
-      const alchemy = new Alchemy(config);
+      });
       // TODO: process through pagination
       const balancesResponse = await alchemy.core.getTokenBalances(address);
       console.log(`The balances of ${address} address are:`, balancesResponse);

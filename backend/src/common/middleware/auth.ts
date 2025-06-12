@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import { getIronSession } from 'iron-session';
 
 import { ironOptions, JumperSession } from '../../shared';
+import { env } from '../utils/envConfig';
 
 declare module 'express' {
   interface Locals {
@@ -17,7 +18,7 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   const authHeader = req.headers.authorization;
   if (authHeader?.startsWith('Bearer ')) {
     const token = authHeader.substring(7);
-    if (token === process.env.BACKEND_API_TOKEN) {
+    if (token === env.BACKEND_API_TOKEN) {
       res.locals.isBackend = true;
       return next();
     }

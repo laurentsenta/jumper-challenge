@@ -13,4 +13,9 @@ export const env = cleanEnv(process.env, {
   IRON_PASSWORD: str({ devDefault: testOnly('password') }),
   IRON_DOMAIN: str({ devDefault: testOnly('.jumper.local') }),
   ALCHEMY_API_KEY: str({ devDefault: testOnly('your-alchemy-api-key') }),
+  BACKEND_API_TOKEN: str({ devDefault: testOnly('test-token') }),
+  // Redis configuration
+  REDIS_HOST: str({ default: 'localhost' }),
+  REDIS_PORT: port({ default: 6379 }),
+  REDIS_PASSWORD: str({ default: '' }),
 });

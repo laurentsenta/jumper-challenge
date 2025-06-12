@@ -1,32 +1,15 @@
 import { StatusCodes } from 'http-status-codes';
 import request from 'supertest';
-import { createTestClient, http, parseEther, publicActions, TestClient } from 'viem';
-import { anvil } from 'viem/chains';
 
 import { app } from '@/server';
 
-const BACKEND_API_TOKEN = process.env.BACKEND_API_TOKEN!;
+import { env } from '../../../common/utils/envConfig';
+
+const BACKEND_API_TOKEN = env.BACKEND_API_TOKEN;
 
 describe('Token Balance API', () => {
-  let testClient: TestClient;
+  // let testClient: TestClient;
   const testAccount01 = '0x0bE1Bc34C9C420d23743ca53ED35B9238f73a950';
-  const testAccount01Balance = parseEther('42.78');
-
-  beforeEach(() => {
-    testClient = createTestClient({
-      chain: anvil,
-      mode: 'anvil',
-      transport: http(),
-    }).extend(publicActions);
-
-    // TODO: this is a simple injection. Improve
-    app.locals.viem = testClient;
-
-    testClient.setBalance({
-      address: testAccount01,
-      value: testAccount01Balance,
-    });
-  });
 
   it('GET /token-balance/:address - should return 401 for unauthorized users', async () => {
     const response = await request(app).get(`/token-balance/${testAccount01}`);
@@ -50,9 +33,12 @@ describe('Token Balance API', () => {
 
     expect(response.statusCode).toEqual(StatusCodes.OK);
     expect(result.success).toBeTruthy();
-    expect(result.responseObject).toEqual({
-      eth: testAccount01Balance.toString(),
-    });
+    expect(result.responseObject).toHaveLength(1);
+    expect(result.responseObject[0].contract).toEqual('0x0');
+    expect(result.responseObject[0].balance).toEqual('0');
+    expect(result.responseObject[0].metadata.name).toEqual('Ethereum');
+    expect(result.responseObject[0].metadata.symbol).toEqual('ETH');
+    expect(result.responseObject[0].metadata.decimals).toEqual(18);
   });
 
   it('GET /token-balance/:address - should return 400 for invalid address', async () => {
