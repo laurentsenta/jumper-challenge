@@ -26,6 +26,7 @@ Follow-up:
 
 ### Todo
 
+- Move the shared code to a shared package.
 - Config rainbowkit to use local testnet and regular test nets.
 - Double check the typing for express' locals (viem client).
 - Review the providers for rainbowkit: https://rainbowkit.com/docs/installation#preparing-to-deploy
