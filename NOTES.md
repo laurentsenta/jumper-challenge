@@ -39,3 +39,16 @@ Follow-up:
 - Tooling to avoid code duplication, define types and
   routes in a single place should be used.
 - CSRF protection.
+
+### Setup
+
+Setup domains in your `/etc/hosts` file:
+
+```
+127.0.0.1       app.jumper.local
+127.0.0.1       api.jumper.local
+::1             app.jumper.local
+::1             api.jumper.local
+```
+
+This makes sharing sessions, and cookies between frontened and backend easier.

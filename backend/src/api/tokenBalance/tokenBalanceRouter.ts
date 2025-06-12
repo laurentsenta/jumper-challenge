@@ -10,6 +10,7 @@ import { ResponseStatus } from '@/common/models/serviceResponse';
 import { TokenBalance, TokenBalanceResponse, TokenBalanceSchema } from '@/common/models/tokenBalanceResponse';
 import { handleServiceResponse } from '@/common/utils/httpHandlers';
 import { tokenService } from '@/data/token';
+import { walletService } from '@/data/wallet';
 
 import { env } from '../../common/utils/envConfig';
 
@@ -135,6 +136,10 @@ export const tokenBalanceRouter: Router = (() => {
         }
         return a.contract.toLowerCase() < b.contract.toLowerCase() ? -1 : 1;
       });
+
+      // Update wallet tokens in database
+      const totalTokensOwned = balancesWithMetadata.length;
+      await walletService.updateWalletTokens(address, chainId, totalTokensOwned);
 
       // add the ethereum balance
       console.log(`The ETH balance of ${address} address is:`, ethBalance);

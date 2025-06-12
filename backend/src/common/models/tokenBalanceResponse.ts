@@ -32,7 +32,7 @@ export const TokenBalanceSchema = z.array(
       name: z.string().nullable(),
       symbol: z.string().nullable(),
       decimals: z.number().nullable(),
-      logo: z.string().nullable()
-    })
+      logo: z.string().nullable(),
+    }),
   })
 );

@@ -18,4 +18,5 @@ export const env = cleanEnv(process.env, {
   REDIS_HOST: str({ default: 'localhost' }),
   REDIS_PORT: port({ default: 6379 }),
   REDIS_PASSWORD: str({ default: '' }),
+  DATABASE_URL: str({ devDefault: testOnly('file:./dev.db') }),
 });

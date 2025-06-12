@@ -1,3 +1,5 @@
+prisma/dev.db
+
 # Logs
 logs
 *.log
@@ -25,3 +27,4 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+/generated/prisma

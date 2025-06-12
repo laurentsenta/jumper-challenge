@@ -19,6 +19,7 @@
   },
   "dependencies": {
     "@asteasolutions/zod-to-openapi": "^7.0.0",
+    "@prisma/client": "^6.9.0",
     "@types/ioredis": "^4.28.10",
     "alchemy-sdk": "^3.6.0",
     "cors": "^2.8.5",
@@ -51,6 +52,7 @@
     "lint-staged": "^15.2.2",
     "pino-pretty": "^11.0.0",
     "prettier": "^3.2.5",
+    "prisma": "^6.9.0",
     "rimraf": "^5.0.5",
     "supertest": "^7.0.0",
     "tsup": "^8.0.2",
