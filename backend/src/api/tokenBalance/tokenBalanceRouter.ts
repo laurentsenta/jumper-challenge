@@ -142,8 +142,6 @@ export const tokenBalanceRouter: Router = (() => {
       await walletService.updateWalletTokens(address, chainId, totalTokensOwned);
 
       // add the ethereum balance
-      console.log(`The ETH balance of ${address} address is:`, ethBalance);
-
       const responseData: TokenBalance = balancesWithMetadata;
 
       // TODO: with the response, return a cache ttl

@@ -8,7 +8,6 @@ import { env } from '../../../common/utils/envConfig';
 const BACKEND_API_TOKEN = env.BACKEND_API_TOKEN;
 
 describe('Token Balance API', () => {
-  // let testClient: TestClient;
   const testAccount01 = '0x0bE1Bc34C9C420d23743ca53ED35B9238f73a950';
 
   it('GET /token-balance/:address - should return 401 for unauthorized users', async () => {

@@ -8,7 +8,7 @@ export default defineConfig({
     },
     globals: true,
     restoreMocks: true,
-    setupFiles: ['./src/zod-extend.ts'],
+    setupFiles: ['./src/test-setup.ts', './src/zod-extend.ts'],
   },
   plugins: [tsconfigPaths()],
 });
