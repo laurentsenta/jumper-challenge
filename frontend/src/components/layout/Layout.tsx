@@ -1,6 +1,5 @@
 import React from 'react';
 import Navbar from './Navbar';
-import AccountWindow from './AccountWindow';
 
 interface LayoutProps {
   children: React.ReactNode;

@@ -32,6 +32,10 @@ const SpaceBackground = () => {
       maxTrailLength: number;
 
       constructor() {
+        if (!canvas) {
+          throw new Error('Canvas not found');
+        }
+
         this.x = Math.random() * canvas.width - canvas.width / 2;
         this.y = Math.random() * canvas.height - canvas.height / 2;
         this.z = Math.random() * 1500;
@@ -42,6 +46,10 @@ const SpaceBackground = () => {
       }
 
       update() {
+        if (!canvas) {
+          throw new Error('Canvas not found');
+        }
+
         // Store current position in trail
         this.trail.unshift({ x: this.x, y: this.y, z: this.z });
         
