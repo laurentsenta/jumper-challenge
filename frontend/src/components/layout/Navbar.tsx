@@ -1,16 +1,15 @@
-import React from 'react';
-import Link from 'next/link';
-import AccountItem from "./AccountItem";
-import { 
-  AppBar, 
-  Toolbar, 
-  Typography, 
-  Box, 
+import RocketLaunchIcon from "@mui/icons-material/RocketLaunch";
+import {
+  AppBar,
+  Box,
   Button,
   Container,
-} from '@mui/material';
-import RocketLaunchIcon from '@mui/icons-material/RocketLaunch';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
+import Link from "next/link";
+import React from "react";
 
 const Navbar: React.FC = () => {
   return (
@@ -40,32 +39,32 @@ const Navbar: React.FC = () => {
               </Typography>
             </Box>
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Button 
-                component={Link} 
-                href="/app/dashboard" 
+              <Button
+                component={Link}
+                href="/app/dashboard"
                 color="inherit"
                 sx={{
                   px: 3,
                   py: 1.5,
                   borderRadius: 2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(138, 43, 226, 0.1)',
-                  }
+                  "&:hover": {
+                    backgroundColor: "rgba(138, 43, 226, 0.1)",
+                  },
                 }}
               >
                 Dashboard
               </Button>
-              <Button 
-                component={Link} 
-                href="/app/leaderboard" 
+              <Button
+                component={Link}
+                href="/app/leaderboard"
                 color="inherit"
                 sx={{
                   px: 3,
                   py: 1.5,
                   borderRadius: 2,
-                  '&:hover': {
-                    backgroundColor: 'rgba(138, 43, 226, 0.1)',
-                  }
+                  "&:hover": {
+                    backgroundColor: "rgba(138, 43, 226, 0.1)",
+                  },
                 }}
               >
                 Leaderboard
@@ -79,4 +78,4 @@ const Navbar: React.FC = () => {
   );
 };
 
-export default Navbar; 
+export default Navbar;

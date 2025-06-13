@@ -18,7 +18,6 @@ const AuthSwitch: React.FC<{
     return isConnected ? null : children;
   }
 
-  // TODO
   return null;
 };
 
