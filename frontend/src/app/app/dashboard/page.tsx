@@ -2,9 +2,9 @@
 
 import AuthSwitch from "@/components/auth/AuthSwitch";
 import LoginBox from "@/components/auth/LoginBox";
-import { AuthStatus } from "@/rainbow/provider";
 import DashboardContent from "./Dashboard";
 import { Box, Container } from "@mui/material";
+import { AuthStatus } from "@/rainbow";
 
 export default function DashboardPage() {
   return (

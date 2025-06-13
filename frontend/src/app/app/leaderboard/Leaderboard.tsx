@@ -1,21 +1,21 @@
 "use client";
 
 import { useLeaderboard } from "@/hooks/useLeaderboard";
-import { LeaderboardEntry } from "@/types/leaderboard";
+import { LeaderboardEntry } from "@/shared";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import {
-    Box,
-    Button,
-    CircularProgress,
-    Fade,
-    Paper,
-    Table,
-    TableBody,
-    TableCell,
-    TableContainer,
-    TableHead,
-    TableRow,
-    Typography
+  Box,
+  Button,
+  CircularProgress,
+  Fade,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
 } from "@mui/material";
 
 const Leaderboard: React.FC = () => {

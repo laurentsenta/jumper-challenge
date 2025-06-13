@@ -1,7 +1,7 @@
 "use client";
 
 import { ConnectionProvider } from "@/components/providers/ConnectionProvider";
-import { RainbowKitWithAuthProvider } from "@/rainbow/provider";
+import { RainbowKitWithAuthProvider } from "@/rainbow";
 import { getDefaultConfig } from "@rainbow-me/rainbowkit";
 import "@rainbow-me/rainbowkit/styles.css";
 import {

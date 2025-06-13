@@ -1,6 +1,6 @@
 "use client";
 
-import { AuthStatus } from "@/rainbow/provider";
+import { AuthStatus } from "@/rainbow";
 import { useAccount } from "wagmi";
 
 // create a component that will switch between items based on the auth status
