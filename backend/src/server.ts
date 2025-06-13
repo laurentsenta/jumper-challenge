@@ -8,7 +8,6 @@ import { openAPIRouter } from '@/api-docs/openAPIRouter';
 import errorHandler from '@/common/middleware/errorHandler';
 import rateLimiter from '@/common/middleware/rateLimiter';
 import requestLogger from '@/common/middleware/requestLogger';
-import viemClient from '@/common/middleware/viemClient';
 
 import { tokenBalanceRouter } from './api/tokenBalance/tokenBalanceRouter';
 import authMiddleware from './common/middleware/auth';
@@ -27,7 +26,6 @@ app.use(rateLimiter);
 app.use(express.json());
 
 app.use(requestLogger);
-app.use(viemClient);
 app.use(authMiddleware);
 
 // Routes
