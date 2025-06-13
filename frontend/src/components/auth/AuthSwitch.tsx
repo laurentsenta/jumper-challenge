@@ -1,21 +1,45 @@
 "use client";
 
-import { AuthStatus } from "@/rainbow";
+import { AuthStatus, useAuth } from "@/rainbow";
+import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 
 // create a component that will switch between items based on the auth status
 const AuthSwitch: React.FC<{
-  status: AuthStatus;
+  loading?: boolean;
+  authenticated?: boolean;
+  unauthenticated?: boolean;
   children: React.ReactNode;
-}> = ({ status, children }) => {
-  const { isConnected } = useAccount();
+}> = ({ loading, authenticated, unauthenticated, children }) => {
+  const rainbowAuth = useAuth();
+  const { isConnected, isConnecting } = useAccount();
+  const [isClient, setIsClient] = useState(false);
+  const isAuthLoading = rainbowAuth === AuthStatus.Loading || isConnecting;
 
-  if (status === AuthStatus.Authenticated) {
-    return isConnected ? children : null;
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    if (loading) {
+      return children;
+    }
+    return null;
   }
 
-  if (status === AuthStatus.Unauthenticated) {
-    return isConnected ? null : children;
+  if (isAuthLoading) {
+    if (loading) {
+      return children;
+    }
+    return null;
+  }
+
+  if (authenticated && isConnected) {
+    return children;
+  }
+
+  if (unauthenticated && !isConnected) {
+    return children;
   }
 
   return null;

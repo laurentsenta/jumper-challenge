@@ -1,10 +1,9 @@
 "use client";
 
 import AuthSwitch from "@/components/auth/AuthSwitch";
-import LoginBox from "@/components/auth/LoginBox";
+import { Box, CircularProgress, Container } from "@mui/material";
 import DashboardContent from "./Dashboard";
-import { Box, Container } from "@mui/material";
-import { AuthStatus } from "@/rainbow";
+import LoginBox from "@/components/auth/LoginBox";
 
 export default function DashboardPage() {
   return (
@@ -18,14 +17,17 @@ export default function DashboardPage() {
             justifyContent: "center",
           }}
         >
-          <AuthSwitch status={AuthStatus.Authenticated}>
+          <AuthSwitch authenticated>
             <DashboardContent />
           </AuthSwitch>
-          <AuthSwitch status={AuthStatus.Unauthenticated}>
+          <AuthSwitch unauthenticated>
             <LoginBox
               title="Connect to Access Dashboard"
               description="Please connect your wallet to view your dashboard"
             />
+          </AuthSwitch>
+          <AuthSwitch loading>
+            <CircularProgress />
           </AuthSwitch>
         </Box>
       </Container>

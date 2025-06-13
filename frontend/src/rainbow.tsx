@@ -6,7 +6,14 @@ import {
   RainbowKitAuthenticationProvider,
   RainbowKitProvider,
 } from "@rainbow-me/rainbowkit";
-import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { createSiweMessage } from "viem/siwe";
 
 export enum AuthStatus {
@@ -14,6 +21,16 @@ export enum AuthStatus {
   Authenticated = "authenticated",
   Unauthenticated = "unauthenticated",
 }
+
+const AuthContext = createContext<AuthStatus | undefined>(undefined);
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (context === undefined) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
+};
 
 const theme = darkTheme({
   accentColor: "#7b3fe4",
@@ -53,8 +70,8 @@ export const RainbowKitWithAuthProvider: React.FC<{
     fetchStatus();
 
     // When window is focused (in case user logs out of another window)
-    // window.addEventListener("focus", fetchStatus);
-    // return () => window.removeEventListener("focus", fetchStatus);
+    window.addEventListener("focus", fetchStatus);
+    return () => window.removeEventListener("focus", fetchStatus);
   }, []);
 
   const authAdapater = useMemo(() => {
@@ -94,7 +111,9 @@ export const RainbowKitWithAuthProvider: React.FC<{
 
   return (
     <RainbowKitAuthenticationProvider adapter={authAdapater} status={status}>
-      <RainbowKitProvider theme={theme}>{children}</RainbowKitProvider>
+      <RainbowKitProvider theme={theme}>
+        <AuthContext.Provider value={status}>{children}</AuthContext.Provider>
+      </RainbowKitProvider>
     </RainbowKitAuthenticationProvider>
   );
 };

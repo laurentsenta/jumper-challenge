@@ -10,6 +10,7 @@ import {
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import Link from "next/link";
 import React from "react";
+import AuthSwitch from "../auth/AuthSwitch";
 
 const Navbar: React.FC = () => {
   return (
@@ -71,7 +72,9 @@ const Navbar: React.FC = () => {
               </Button>
             </Box>
           </Box>
-          <ConnectButton showBalance={false} />
+          <AuthSwitch unauthenticated authenticated>
+            <ConnectButton showBalance={false} />
+          </AuthSwitch>
         </Toolbar>
       </Container>
     </AppBar>
