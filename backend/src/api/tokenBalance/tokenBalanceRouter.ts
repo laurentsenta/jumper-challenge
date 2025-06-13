@@ -119,7 +119,6 @@ export const tokenBalanceRouter: Router = (() => {
           };
         })
       );
-      console.log(`The metadata of ${address} address are:`, balancesWithMetadata);
 
       // add ethereum
       const ethBalance = await alchemy.core.getBalance(address);
@@ -141,7 +140,6 @@ export const tokenBalanceRouter: Router = (() => {
       const totalTokensOwned = balancesWithMetadata.length;
       await walletService.updateWalletTokens(address, chainId, totalTokensOwned);
 
-      // add the ethereum balance
       const responseData: TokenBalance = balancesWithMetadata;
 
       // TODO: with the response, return a cache ttl
@@ -155,7 +153,6 @@ export const tokenBalanceRouter: Router = (() => {
       handleServiceResponse(serviceResponse, res);
     } catch (error) {
       console.error('Error fetching token balances:', error);
-
       const serviceResponse = new TokenBalanceResponse(
         ResponseStatus.Failed,
         'Failed to fetch token balances',
